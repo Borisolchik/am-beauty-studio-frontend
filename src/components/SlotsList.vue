@@ -119,7 +119,7 @@ watch([() => props.masterName, () => props.serviceId], async ([master, service])
   clientPhone.value = ''
 
   try {
-    const res = await axios.get(`/api/slots/${encodeURIComponent(master)}`, {
+    const res = await axios.get(`${backendUrl}/api/slots/${encodeURIComponent(master)}`, {
       params: { service: props.selectedService?.name }
     })
     slots.value = res.data
