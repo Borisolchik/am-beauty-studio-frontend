@@ -1,39 +1,64 @@
 <template>
   <div class="master-select">
-    <label for="master">Выберите мастера:</label>
-    <div class="select-wrapper">
-      <select id="master" @change="selectMaster($event)" :value="selectedMasterName">
-        <option value="">-- Выберите мастера --</option>
-        <option v-for="master in masters" :key="master.id" :value="master.name">
-          {{ master.name }}
-        </option>
-      </select>
+    <label>Выберите мастера:</label>
+
+    <div class="masters-list">
+      <label
+        v-for="master in masters"
+        :key="master.id"
+        class="master-card"
+        :class="{ active: selectedMasterId === master.id }"
+      >
+        <input
+          type="checkbox"
+          :checked="selectedMasterId === master.id"
+          @change="selectMaster(master)"
+        />
+
+        <img
+          :src="masterPhotos[`master-${master.id}`]"
+          alt="Фото мастера"
+          class="master-photo"
+        />
+
+        <span class="master-name">{{ master.name }}</span>
+      </label>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, defineEmits } from 'vue'
+import axios from 'axios'
 
-const backendUrl = import.meta.env.VITE_API_URL;
-const emit = defineEmits(['masterSelected']);
-const masters = ref([]);
-const selectedMasterName = ref('');
+const backendUrl = import.meta.env.VITE_API_URL
+const emit = defineEmits(['masterSelected'])
+
+const masters = ref([])
+const selectedMasterId = ref(null)
+
+const masterPhotos = {
+  'master-1': '/images/masters/master-1.jpg',
+  'master-2': '/images/masters/master-2.jpg'
+}
 
 onMounted(async () => {
   try {
-    const res = await axios.get(`${backendUrl}/api/masters`); 
-    masters.value = res.data;
+    const res = await axios.get(`${backendUrl}/api/masters`)
+    masters.value = res.data
   } catch (err) {
-    console.error('Ошибка при получении мастеров:', err);
+    console.error('Ошибка при получении мастеров:', err)
   }
-});
+})
 
-function selectMaster(event) {
-  const master = masters.value.find(m => m.name === event.target.value);
-  selectedMasterName.value = event.target.value;
-  emit('masterSelected', master);
+function selectMaster(master) {
+  if (selectedMasterId.value === master.id) {
+    selectedMasterId.value = null
+    emit('masterSelected', null)
+  } else {
+    selectedMasterId.value = master.id
+    emit('masterSelected', master)
+  }
 }
 </script>
 
@@ -51,7 +76,6 @@ label {
   font-size: 1rem;
 }
 
-/* Обертка для кастомной стрелки */
 .select-wrapper {
   position: relative;
   width: 100%;
@@ -102,5 +126,64 @@ select:focus {
 /* Для IE/Edge стрелка не отображается дважды */
 select::-ms-expand {
   display: none;
+}
+
+.master-select {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #d6336c;
+}
+
+.masters-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.master-card {
+  position: relative;
+  border: 2px solid #eee;
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  background: #fafafa;
+}
+
+.master-card:hover {
+  border-color: #d6336c;
+}
+
+.master-card.active {
+  border-color: #d6336c;
+  box-shadow: 0 0 8px rgba(214, 51, 108, 0.3);
+}
+
+.master-card input {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.master-photo {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.master-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
 }
 </style>
