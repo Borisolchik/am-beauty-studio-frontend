@@ -141,9 +141,9 @@ label {
 }
 
 .masters-list {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
 }
 
 .master-card {
@@ -173,8 +173,8 @@ label {
 }
 
 .master-photo {
-  width: 70px;
-  height: 70px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 6px;
