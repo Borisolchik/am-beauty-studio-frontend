@@ -38,8 +38,8 @@ const masters = ref([])
 const selectedMasterId = ref(null)
 
 const masterPhotos = {
-  'master-1': '/images/masters/master-1.jpg',
-  'master-2': '/images/masters/master-2.jpg'
+  'master-1': '/images/masters/master-1.jpeg',
+  'master-2': '/images/masters/master-2.jpeg'
 }
 
 onMounted(async () => {
@@ -141,9 +141,9 @@ label {
 }
 
 .masters-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .master-card {
