@@ -173,8 +173,10 @@ label {
 }
 
 .master-photo {
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  max-height: 150px;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 6px;
