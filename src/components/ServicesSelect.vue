@@ -25,6 +25,8 @@ const selectedServiceId = ref('');
 watch(
   () => props.masterId,
   async (id) => {
+    selectedServiceId.value = '';
+    emit('serviceSelected', null);
     if (!id) {
       services.value = [];
       selectedServiceId.value = '';
