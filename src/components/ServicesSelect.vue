@@ -34,6 +34,7 @@ watch(
     try {
       const res = await axios.get(`${backendUrl}/api/services/by-master/${id}`);
       services.value = res.data;
+      resetSelection();
     } catch (err) {
       console.error('Ошибка при загрузке услуг для мастера:', err);
       services.value = [];
@@ -41,6 +42,11 @@ watch(
   },
   { immediate: true }
 );
+
+function resetSelection() {
+  selectedServiceId.value = '';
+  emit('serviceSelected', null);
+}
 
 function selectService(event) {
   selectedServiceId.value = event.target.value;
