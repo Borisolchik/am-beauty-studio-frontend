@@ -98,7 +98,7 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
   max-width: 420px;
   width: 100%;
   box-sizing: border-box;
-  padding: 16px 16px 50px;
+  padding-bottom: 50px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -108,7 +108,6 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
   width: 100%;
   max-width: 420px;
   background: #fff;
-  border-radius: 16px;
   padding: 12px;
   box-sizing: border-box;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);

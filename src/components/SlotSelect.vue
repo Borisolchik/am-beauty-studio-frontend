@@ -77,6 +77,7 @@ function handleSuccess({ date, time }: { date: string; time: string }) {
   background: #fafafa;
   border: 1px solid #e6e6e6;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .slots-list strong {
