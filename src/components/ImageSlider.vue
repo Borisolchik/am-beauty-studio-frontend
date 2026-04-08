@@ -32,7 +32,7 @@ function startAutoSlide() {
   stopAutoSlide()
   interval = setInterval(() => {
     next()
-  }, 2000)
+  }, 3000)
 }
 
 function stopAutoSlide() {
