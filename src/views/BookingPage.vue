@@ -73,10 +73,10 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
       <MasterSelect :masters="masters" :selected-master-id="normalizeId(selectedMaster?.id)"
         @select="handleMasterSelect" />
 
+      <ImageSlider :images="images" />
+
       <ServiceSelect v-if="selectedMaster" :services="services" :selected-service-id="selectedService?.id ?? null"
         @select="handleServiceSelect" />
-
-      <ImageSlider :images="images" />
 
       <SlotSelect v-if="selectedService" :slots="slots" :master-name="selectedMaster!.name"
         :service-name="selectedService!.name" @booked="handleSlotBooked" />
