@@ -40,7 +40,7 @@ watch(
 <template>
   <div class="master-select">
     <div v-if="masters.length > 1">
-      <div>Выберите мастера:</div>
+      <h3>Выберите мастера:</h3>
       <div class="masters-list">
         <label v-for="master in masters" :key="master.id" class="master-card"
           :class="{ active: master.id === selectedMasterId }">

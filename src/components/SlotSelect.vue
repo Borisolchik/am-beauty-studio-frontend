@@ -66,6 +66,7 @@ function handleSuccess({ date, time }: { date: string; time: string }) {
 <style scoped>
 .slots-list h3 {
   margin-bottom: 12px;
+  margin-top: 0;
   font-size: 18px;
   color: #222;
 }

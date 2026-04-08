@@ -23,7 +23,7 @@ function onChange(event: Event) {
 
 <template>
   <div class="service-select">
-    <label>Выберите услугу:</label>
+    <h3>Выберите услугу:</h3>
     <select :value="selectedServiceId ?? ''" @change="onChange">
       <option value="">-- Выберите услугу --</option>
       <option v-for="service in services" :key="service.id" :value="service.id">
@@ -42,10 +42,11 @@ function onChange(event: Event) {
   max-width: 300px;
 }
 
-.service-select label {
-  font-size: 14px;
-  color: #444;
-  font-weight: 500;
+.service-select h3 {
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 12px;
+  margin-top: 0;
 }
 
 .service-select select {
