@@ -1,147 +1,110 @@
-<template>
-  <div 
-    class="slider"
-    @touchstart="onTouchStart"
-    @touchend="onTouchEnd"
-  >
-    <div class="slider-window">
-      <img :src="images[currentIndex]" alt="Фото" class="slider-image" />
-    </div>
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-    <div class="controls">
-      <button @click="prev">‹</button>
-      <button @click="next">›</button>
-    </div>
-
-    <div class="dots">
-      <span
-        v-for="(img, index) in images"
-        :key="index"
-        class="dot"
-        :class="{ active: index === currentIndex }"
-        @click="goTo(index)"
-      ></span>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-
-// Динамическая загрузка всех картинок из assets
-const importImages = import.meta.glob('@/assets/images/*.{jpg,jpeg,png}', { eager: true })
-const images = Object.values(importImages).map(mod => mod.default)
+const props = defineProps<{
+  images: string[]
+}>()
 
 const currentIndex = ref(0)
-const intervalTime = 4000
-let timer = null
+let interval: ReturnType<typeof setInterval> | null = null
 
-// Для свайпов
-let startX = 0
-const swipeThreshold = 50 // минимальное смещение для свайпа
+const currentImage = computed(() => props.images[currentIndex.value])
 
-const next = () => {
-  currentIndex.value = (currentIndex.value + 1) % images.length
+function next() {
+  if (props.images.length === 0) return
+
+  currentIndex.value =
+    currentIndex.value < props.images.length - 1
+      ? currentIndex.value + 1
+      : 0
 }
 
-const prev = () => {
-  currentIndex.value = (currentIndex.value - 1 + images.length) % images.length
+function prev() {
+  if (props.images.length === 0) return
+
+  currentIndex.value =
+    currentIndex.value > 0
+      ? currentIndex.value - 1
+      : props.images.length - 1
 }
 
-const goTo = (index) => {
-  currentIndex.value = index
+function startAutoSlide() {
+  stopAutoSlide()
+  interval = setInterval(() => {
+    next()
+  }, 2000)
 }
 
-// Обработка свайпов пальцем
-const onTouchStart = (e) => {
-  startX = e.touches[0].clientX
-}
-
-const onTouchEnd = (e) => {
-  const endX = e.changedTouches[0].clientX
-  const diff = endX - startX
-
-  if (diff > swipeThreshold) {
-    prev() // свайп вправо
-  } else if (diff < -swipeThreshold) {
-    next() // свайп влево
+function stopAutoSlide() {
+  if (interval) {
+    clearInterval(interval)
+    interval = null
   }
 }
 
-// // Автопрокрутка
-// onMounted(() => {
-//   timer = setInterval(next, intervalTime)
-// })
+onMounted(() => {
+  startAutoSlide()
+})
 
-onBeforeUnmount(() => {
-  clearInterval(timer)
+onUnmounted(() => {
+  stopAutoSlide()
 })
 </script>
 
+<template>
+  <div class="slider" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
+    <div class="slider__image">
+      <img :src="currentImage" alt="photo" />
+    </div>
+
+    <button class="slider__btn left" @click="prev">‹</button>
+    <button class="slider__btn right" @click="next">›</button>
+  </div>
+</template>
+
 <style scoped>
 .slider {
-  margin: auto;
   position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  border-radius: 16px;
   overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  margin-top: 30px;
 }
 
-.slider-window {
+.slider__image img {
   width: 100%;
-  height: 350px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.slider-image {
-  width: 100%;
-  height: 100%;
+  height: 320px;
   object-fit: cover;
-  transition: opacity 0.5s ease-in-out;
+  display: block;
 }
 
-.controls {
-  display: flex;
-  justify-content: space-between;
+.slider__btn {
   position: absolute;
-  top: 45%;
-  width: 100%;
-  padding: 0 10px;
-  box-sizing: border-box;
-}
-
-button {
-  background: rgba(0, 0, 0, 0.4);
-  color: white;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.4);
+  color: #fff;
   border: none;
-  font-size: 28px;
-  cursor: pointer;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
-
-.dots {
+  cursor: pointer;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  transition: 0.2s;
 }
 
-.dot {
-  height: 10px;
-  width: 10px;
-  margin: 0 5px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.slider__btn:hover {
+  background: rgba(0,0,0,0.6);
 }
 
-.dot.active {
-  background-color: #333;
+.left {
+  left: 15px;
+}
+
+.right {
+  right: 15px;
 }
 </style>
