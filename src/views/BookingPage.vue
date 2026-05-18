@@ -43,6 +43,7 @@ watch(selectedMaster, async (master) => {
   services.value = res.data.map((s: any) => ({
     ...s,
     id: Number(s.id),
+    slotsRequired: Number(s.id) === 8 ? 2 : 1
   }))
 })
 
@@ -79,7 +80,7 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
         @select="handleServiceSelect" />
 
       <SlotSelect v-if="selectedService" :slots="slots" :master-name="selectedMaster!.name"
-        :service-name="selectedService!.name" @booked="handleSlotBooked" />
+        :service-name="selectedService!.name" :slots-required="selectedService.slotsRequired" @booked="handleSlotBooked" />
     </div>
   </div>
 </template>

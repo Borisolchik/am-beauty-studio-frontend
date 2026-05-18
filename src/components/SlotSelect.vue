@@ -2,13 +2,15 @@
 import { ref, computed, watch } from 'vue'
 import { getSlots } from '@/api/slots.api'
 import BookingModal from './BookingModal.vue'
+import type { Slot } from '@/types/slot'
 
 const props = defineProps<{
   masterName: string
   serviceName: string
+  slotsRequired: number
 }>()
 
-const slots = ref<any[]>([])
+const slots = ref<Slot[]>([])
 const selectedDate = ref<string | null>(null)
 const selectedTime = ref<string | null>(null)
 const showModal = ref(false)
@@ -18,7 +20,7 @@ watch(
   async ([master, service]) => {
     if (!master) return
 
-    const res = await getSlots(master, service)
+    const res = await getSlots(master, service, props.slotsRequired)
     slots.value = res.data
   },
   { immediate: true }
@@ -58,8 +60,15 @@ function handleSuccess({ date, time }: { date: string; time: string }) {
       </button>
     </div>
 
-    <BookingModal :show="showModal" :date="selectedDate" :time="selectedTime" :master-name="masterName"
-      :service-name="serviceName" @close="showModal = false" @success="handleSuccess" />
+    <BookingModal
+      :show="showModal"
+      :date="selectedDate"
+      :time="selectedTime"
+      :master-name="masterName"
+      :service-name="serviceName"
+      :slots-required="props.slotsRequired"
+      @close="showModal = false"
+    />
   </div>
 </template>
 

@@ -10,6 +10,7 @@ const props = defineProps<{
   time: string | null
   masterName: string
   serviceName: string
+  slotsRequired: number
 }>()
 
 const emit = defineEmits<{
@@ -61,7 +62,8 @@ async function confirmBooking() {
       time: props.time!,
       service: props.serviceName,
       client: clientName.value,
-      phone: clientPhone.value
+      phone: clientPhone.value,
+      slotsRequired: props.slotsRequired
     })
 
     isSuccess.value = true
