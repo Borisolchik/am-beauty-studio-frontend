@@ -24,3 +24,10 @@ export const bookSlot = (data: {
 }) => {
   return http.post('/api/slots', data)
 }
+
+export const findBooking = (data: {
+  phone: string
+  cancelCode: string
+}) => {
+  return http.post('/api/slots/find', data)
+}

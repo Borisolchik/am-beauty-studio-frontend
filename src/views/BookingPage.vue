@@ -11,6 +11,7 @@ import ServiceSelect from '@/components/ServiceSelect.vue'
 import SlotSelect from '@/components/SlotSelect.vue'
 import SalonInfo from '@/components/SalonInfo.vue'
 import ImageSlider from '@/components/ImageSlider.vue'
+import CancelBooking from '@/components/CancelBooking.vue'
 
 const images = Object.values(
   import.meta.glob('@/assets/images/*.{jpg,jpeg,png,webp}', {
@@ -26,6 +27,7 @@ const normalizeId = (id: string | number | null | undefined) => id ? Number(id) 
 
 const selectedMaster = ref<Master | null>(null)
 const selectedService = ref<Service | null>(null)
+const showCancel = ref(false)
 
 onMounted(async () => {
   const res = await getMasters()
@@ -71,16 +73,51 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
   <div class="booking-page">
     <div class="booking-container">
       <SalonInfo />
-      <MasterSelect :masters="masters" :selected-master-id="normalizeId(selectedMaster?.id)"
-        @select="handleMasterSelect" />
 
-      <ServiceSelect v-if="selectedMaster" :services="services" :selected-service-id="selectedService?.id ?? null"
-        @select="handleServiceSelect" />
+      <div
+        v-if="!showCancel"
+        class="cancel-link"
+      >
+        <button @click="showCancel = true">
+          Уже есть запись? Отменить
+        </button>
+      </div>
 
-      <SlotSelect v-if="selectedService" :slots="slots" :master-name="selectedMaster!.name"
-        :service-name="selectedService!.name" :slots-required="selectedService.slotsRequired" @booked="handleSlotBooked" />
+      <div v-if="!showCancel">
 
-      <ImageSlider :images="images" />
+        <MasterSelect
+          :masters="masters"
+          :selected-master-id="normalizeId(selectedMaster?.id)"
+          @select="handleMasterSelect"
+        />
+
+        <ServiceSelect
+          v-if="selectedMaster"
+          :services="services"
+          :selected-service-id="selectedService?.id ?? null"
+          @select="handleServiceSelect"
+        />
+
+        <SlotSelect
+          v-if="selectedService"
+          :slots="slots"
+          :master-name="selectedMaster!.name"
+          :service-name="selectedService!.name"
+          :slots-required="selectedService.slotsRequired"
+          @booked="handleSlotBooked"
+        />
+
+      </div>
+
+      <CancelBooking
+        v-else
+        @back="showCancel = false"
+      />
+
+      <ImageSlider
+        v-if="!showCancel"
+        :images="images"
+      />
     </div>
   </div>
 </template>
