@@ -15,14 +15,21 @@ const selectedDate = ref<string | null>(null)
 const selectedTime = ref<string | null>(null)
 const showModal = ref(false)
 
+async function loadSlots() {
+  if (!props.masterName) return
+
+  const res = await getSlots(
+    props.masterName,
+    props.serviceName,
+    props.slotsRequired
+  )
+
+  slots.value = res.data
+}
+
 watch(
   () => [props.masterName, props.serviceName],
-  async ([master, service]) => {
-    if (!master) return
-
-    const res = await getSlots(master, service, props.slotsRequired)
-    slots.value = res.data
-  },
+  loadSlots,
   { immediate: true }
 )
 
@@ -41,12 +48,6 @@ function openModal(date: string, time: string) {
   selectedDate.value = date
   selectedTime.value = time
   showModal.value = true
-}
-
-function handleSuccess({ date, time }: { date: string; time: string }) {
-  slots.value = slots.value.filter(
-    s => !(s.date === date && s.time === time)
-  )
 }
 </script>
 
@@ -68,6 +69,7 @@ function handleSuccess({ date, time }: { date: string; time: string }) {
       :service-name="serviceName"
       :slots-required="props.slotsRequired"
       @close="showModal = false"
+      @success="loadSlots"
     />
   </div>
 </template>

@@ -15,6 +15,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void
+  (e: 'success'): void
 }>()
 
 const clientName = ref('')
@@ -81,6 +82,8 @@ async function confirmBooking() {
 
     cancelCode.value = response.data.cancelCode
     isSuccess.value = true
+
+    emit('success')
   } catch (err: any) {
     formError.value = err.response?.data?.error || 'Ошибка записи'
   } finally {
