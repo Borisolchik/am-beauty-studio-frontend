@@ -22,6 +22,8 @@ const clientPhone = ref('+375 ')
 const formError = ref('')
 const isLoading = ref(false)
 const isSuccess = ref(false)
+const cancelCode = ref('')
+const isCopied = ref(false)
 
 const phonePattern = helpers.regex(/^(\+375) \(\d{2}\) \d{3}-\d{2}-\d{2}$/)
 
@@ -40,8 +42,19 @@ function close() {
   formError.value = ''
   isLoading.value = false
   isSuccess.value = false
+  cancelCode.value = ''
 
   v$.value.$reset()
+}
+
+async function copyCancelCode() {
+  await navigator.clipboard.writeText(cancelCode.value)
+
+  isCopied.value = true
+
+  setTimeout(() => {
+    isCopied.value = false
+  }, 2000)
 }
 
 async function confirmBooking() {
@@ -56,7 +69,7 @@ async function confirmBooking() {
   isLoading.value = true
 
   try {
-    await bookSlot({
+    const response = await bookSlot({
       masterName: props.masterName,
       date: props.date!,
       time: props.time!,
@@ -66,6 +79,7 @@ async function confirmBooking() {
       slotsRequired: props.slotsRequired
     })
 
+    cancelCode.value = response.data.cancelCode
     isSuccess.value = true
   } catch (err: any) {
     formError.value = err.response?.data?.error || 'Ошибка записи'
@@ -102,6 +116,19 @@ watch(clientPhone, (val) => {
         <p>
           На <b>{{ date }}</b> в <b>{{ time }}</b>
         </p>
+        <div class="cancel-code">
+          <p>Код для отмены записи:</p>
+
+          <strong>{{ cancelCode }}</strong>
+
+          <button class="copy-btn" @click="copyCancelCode">
+            {{ isCopied ? 'Скопировано ✓' : 'Скопировать код' }}
+          </button>
+
+          <small>
+            ⚠️ Важно! Запомните этот код. Он понадобится, если захотите отменить запись.
+          </small>
+        </div>
         <button class="booking-btn" @click="close">
           Ок
         </button>
@@ -264,5 +291,47 @@ watch(clientPhone, (val) => {
 .booking-btn {
   background: #111;
   color: #fff;
+}
+.cancel-code {
+  margin-top: 16px;
+  padding: 14px;
+  background: #f7f7f7;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.cancel-code p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.cancel-code strong {
+  display: block;
+  font-size: 24px;
+  letter-spacing: 4px;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.copy-btn {
+  width: 100%;
+  margin-top: 4px;
+  background: #fff !important;
+  color: #111 !important;
+  border: 1px solid #ddd !important;
+}
+
+.copy-btn:hover {
+  background: #f0f0f0 !important;
+}
+
+.cancel-code small {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #d32f2f;
+  font-weight: 500;
 }
 </style>

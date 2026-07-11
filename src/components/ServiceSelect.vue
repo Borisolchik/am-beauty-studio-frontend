@@ -40,6 +40,7 @@ function onChange(event: Event) {
   gap: 8px;
   font-family: system-ui, -apple-system, sans-serif;
   max-width: 300px;
+  margin-top: 30px;
 }
 
 .service-select h3 {

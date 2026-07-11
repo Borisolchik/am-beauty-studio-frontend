@@ -13,6 +13,11 @@ export const getSlots = (
   })
 }
 
+export interface BookSlotResponse {
+  message: string
+  cancelCode: string
+}
+
 export const bookSlot = (data: {
   masterName: string
   date: string
@@ -22,7 +27,7 @@ export const bookSlot = (data: {
   phone: string
   slotsRequired: number
 }) => {
-  return http.post('/api/slots', data)
+  return http.post<BookSlotResponse>('/api/slots', data)
 }
 
 export const findBooking = (data: {
