@@ -39,5 +39,5 @@ export function cancelBooking(data: {
   phone: string
   cancelCode: string
 }) {
-  return http.post('/slots/cancel', data)
+  return http.post('/api/slots/cancel', data)
 }
