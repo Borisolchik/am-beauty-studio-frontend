@@ -175,14 +175,13 @@ function back() {
     </div>
 
 
-    <div v-if="successMessage">
+    <div v-if="successMessage" class="success-message">
       {{ successMessage }}
     </div>
 
-    <div v-if="formError">
+    <div v-if="formError" class="error-message">
       {{ formError }}
     </div>
-
 
     <button
       class="back-btn"
@@ -308,5 +307,29 @@ function back() {
 
 .cancel-booking > div {
   transition: all 0.2s ease;
+}
+
+.success-message {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f1f8f1;
+  border: 1px solid #b7dfb7;
+  color: #2e7d32;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.error-message {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff3f3;
+  border: 1px solid #f1b5b5;
+  color: #d32f2f;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
 }
 </style>

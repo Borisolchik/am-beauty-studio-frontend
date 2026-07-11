@@ -152,7 +152,6 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
 }
 
 .cancel-link {
-  margin-top: 20px;
   text-align: center;
 }
 
