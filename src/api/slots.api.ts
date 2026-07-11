@@ -31,3 +31,13 @@ export const findBooking = (data: {
 }) => {
   return http.post('/api/slots/find', data)
 }
+
+export function cancelBooking(data: {
+  masterName: string
+  date: string
+  time: string
+  phone: string
+  cancelCode: string
+}) {
+  return http.post('/slots/cancel', data)
+}

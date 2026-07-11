@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
-import { findBooking } from '@/api/slots.api'
+import { findBooking, cancelBooking } from '@/api/slots.api'
 
 const emit = defineEmits<{
   (e: 'back'): void
@@ -13,6 +13,8 @@ const cancelCode = ref('')
 
 const formError = ref('')
 const isLoading = ref(false)
+const isCanceling = ref(false)
+const successMessage = ref('')
 
 const booking = ref<any>(null)
 
@@ -30,7 +32,6 @@ const v$ = useVuelidate(
     cancelCode
   }
 )
-
 
 async function searchBooking() {
   formError.value = ''
@@ -65,6 +66,35 @@ async function searchBooking() {
   }
 }
 
+async function cancel() {
+  if (!booking.value) return
+
+  formError.value = ''
+  successMessage.value = ''
+  isCanceling.value = true
+
+  try {
+    await cancelBooking({
+      masterName: booking.value.masterName,
+      date: booking.value.date,
+      time: booking.value.time,
+      phone: phone.value,
+      cancelCode: cancelCode.value,
+    })
+
+    successMessage.value = 'Запись успешно отменена'
+
+    booking.value = null
+    phone.value = '+375 '
+    cancelCode.value = ''
+
+  } catch (err: any) {
+    formError.value =
+      err.response?.data?.error || 'Ошибка отмены записи'
+  } finally {
+    isCanceling.value = false
+  }
+}
 
 function back() {
   emit('back')
@@ -135,8 +165,20 @@ function back() {
         Мастер: {{ booking.masterName }}
       </p>
 
+
+      <button
+        class="cancel-btn"
+        :disabled="isCanceling"
+        @click="cancel"
+      >
+        {{ isCanceling ? 'Отмена...' : 'Отменить запись' }}
+      </button>
+
     </div>
 
+    <div v-if="successMessage">
+      {{ successMessage }}
+    </div>
 
     <div v-if="formError">
       {{ formError }}
