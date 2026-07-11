@@ -150,4 +150,35 @@ function handleSlotBooked({ date, time }: { date: string; time: string }) {
   box-sizing: border-box;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
 }
+
+.cancel-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.cancel-link button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-link button:hover {
+  border-color: #999;
+  background: #f5f5f5;
+  color: #111;
+}
+
+.cancel-link button:active {
+  transform: scale(0.97);
+}
+
+.cancel-link button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
 </style>
