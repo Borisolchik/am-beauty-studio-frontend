@@ -38,30 +38,40 @@ watch(
 </script>
 
 <template>
-  <div class="master-select">
-    <div v-if="masters.length > 1">
-      <h3>Выберите мастера:</h3>
-      <div class="masters-list">
-        <label v-for="master in masters" :key="master.id" class="master-card"
-          :class="{ active: master.id === selectedMasterId }">
-          <input type="checkbox" :checked="master.id === selectedMasterId" @change="onSelect(master)" />
-          <img :src="masterPhotos[`master-${master.id}`]" alt="Фото мастера" class="master-photo" />
-          <span class="master-name">
+    <div class="master-select">
+        <div v-if="masters.length > 1">
+            <h3>Выберите мастера:</h3>
+            <div class="masters-list">
+                <label
+                    v-for="master in masters"
+                    :key="master.id"
+                    class="master-card"
+                    :class="{ active: master.id === selectedMasterId }"
+                >
+                    <input
+                        type="radio"
+                        name="master"
+                        :value="master.id"
+                        :checked="master.id === selectedMasterId"
+                        @change="onSelect(master)"
+                    />
+                    <img :src="masterPhotos[`master-${master.id}`]" alt="Фото мастера" class="master-photo" />
+                    <span class="master-name">
             {{ master.name }}
           </span>
-        </label>
-      </div>
-    </div>
+                </label>
+            </div>
+        </div>
 
-    <div v-else-if="masters.length === 1" class="single-master">
-      <div class="master-card active">
-        <img :src="masterPhotos[`master-${masters[0].id}`]" alt="Фото мастера" class="master-photo" />
-        <span class="master-name">
+        <div v-else-if="masters.length === 1" class="single-master">
+            <div class="master-card active">
+                <img :src="masterPhotos[`master-${masters[0].id}`]" alt="Фото мастера" class="master-photo" />
+                <span class="master-name">
           {{ masters[0].name }}
         </span>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
